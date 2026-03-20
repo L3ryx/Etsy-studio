@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Etsy Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --cream:#faf7f2;--white:#fff;--ink:#1a1208;--muted:#7a6e5f;
+      --coral:#ff5c35;--coral-l:#fff0ec;
+      --teal:#00b8a0;--teal-l:#e6faf7;
+      --yellow:#ffd166;--yellow-l:#fff9e6;
+      --violet:#7c3aed;--violet-l:#f3eeff;
+      --pink:#ff6b9d;--border:#e8e0d4;
+    }
+    html,body{min-height:100%;background:var(--cream);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;overflow-x:hidden}
+    .blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:0.15;pointer-events:none;z-index:0;animation:drift 14s ease-in-out infinite alternate}
+    .b1{width:520px;height:520px;background:var(--coral);top:-160px;right:-120px}
+    .b2{width:420px;height:420px;background:var(--teal);bottom:-120px;left:-100px;animation-delay:-5s}
+    .b3{width:320px;height:320px;background:var(--yellow);top:45%;left:35%;animation-delay:-10s}
+    @keyframes drift{to{transform:translate(28px,18px) scale(1.07)}}
+
+    header{position:sticky;top:0;z-index:100;height:66px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;background:rgba(250,247,242,0.9);backdrop-filter:blur(20px);border-bottom:1.5px solid var(--border)}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .logo-mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--coral),var(--pink));display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 4px 14px rgba(255,92,53,0.35)}
+    .logo-text{font-family:'Fraunces',serif;font-size:1.35rem;font-weight:900;color:var(--ink)}
+    .logo-text em{color:var(--coral);font-style:italic}
+    .hdr-right{display:flex;align-items:center;gap:10px}
+    #connect-btn{padding:9px 18px;border-radius:24px;border:1.5px solid var(--coral);background:var(--coral-l);color:var(--coral);font-family:'Plus Jakarta Sans',sans-serif;font-size:0.83rem;font-weight:700;cursor:pointer;transition:all 0.2s}
+    #connect-btn:hover{background:var(--coral);color:#fff}
+    #status{display:none;align-items:center;gap:7px;padding:8px 16px;border-radius:24px;background:var(--teal-l);color:var(--teal);font-size:0.82rem;font-weight:700}
+    #status.on{display:flex}
+    .sdot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:sp 2s ease infinite}
+    @keyframes sp{0%,100%{box-shadow:0 0 0 0 rgba(0,184,160,0.4)}50%{box-shadow:0 0 0 6px rgba(0,184,160,0)}}
+
+    main{position:relative;z-index:10;max-width:860px;margin:0 auto;padding:52px 22px 80px}
+
+    .hero{margin-bottom:48px}
+    .htag{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:var(--yellow-l);border:1.5px solid var(--yellow);color:#8a5a00;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:18px}
+    .hero h1{font-family:'Fraunces',serif;font-size:clamp(2.3rem,6vw,3.8rem);font-weight:900;line-height:1.1;margin-bottom:14px}
+    .hero h1 span{display:block;color:var(--coral);font-style:italic}
+    .hero p{font-size:1rem;color:var(--muted);max-width:500px;line-height:1.7}
+
+    .pbar{display:flex;gap:4px;background:var(--white);border:1.5px solid var(--border);border-radius:20px;padding:5px;margin-bottom:36px}
+    .ps{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 6px;border-radius:14px;font-size:0.75rem;font-weight:700;color:var(--muted);transition:all 0.3s}
+    .ps.act{background:var(--coral);color:#fff;box-shadow:0 4px 16px rgba(255,92,53,0.3)}
+    .ps.dn{background:var(--teal-l);color:var(--teal)}
+
+    .sec{background:var(--white);border-radius:24px;border:1.5px solid var(--border);padding:30px;margin-bottom:18px;position:relative;overflow:hidden;transition:border-color 0.2s,box-shadow 0.2s}
+    .sec:focus-within{border-color:var(--coral);box-shadow:0 0 0 4px rgba(255,92,53,0.07)}
+    .top-bar{height:4px;position:absolute;top:0;left:0;right:0}
+    .tb-coral{background:linear-gradient(90deg,var(--coral),var(--pink))}
+    .tb-yellow{background:linear-gradient(90deg,var(--yellow),#ffb800)}
+    .tb-teal{background:linear-gradient(90deg,var(--teal),#00d4bb)}
+    .tb-violet{background:linear-gradient(90deg,var(--violet),var(--pink))}
+    .sec-hdr{display:flex;align-items:center;gap:12px;margin-top:6px;margin-bottom:22px}
+    .sec-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+    .ic-coral{background:var(--coral-l)}.ic-yellow{background:var(--yellow-l)}.ic-teal{background:var(--teal-l)}.ic-violet{background:var(--violet-l)}
+    .sec-ttl{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700}
+    .sec-sub{font-size:0.78rem;color:var(--muted);margin-top:2px}
+
+    #drop{border:2.5px dashed var(--border);border-radius:16px;padding:44px 20px;text-align:center;cursor:pointer;transition:all 0.22s;position:relative;background:var(--cream)}
+    #drop:hover,#drop.ov{border-color:var(--coral);background:var(--coral-l);transform:scale(1.003)}
+    #drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+    .dico{font-size:2.8rem;display:block;margin-bottom:10px;animation:fl 3s ease-in-out infinite}
+    @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    .dtitle{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:700;margin-bottom:5px}
+    .dhint{font-size:0.78rem;color:var(--muted)}
+    .dhint strong{color:var(--coral)}
+    #prevs{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+    .pw{position:relative;width:86px;height:86px;border-radius:13px;overflow:hidden;border:2px solid var(--border);animation:pin 0.25s ease;transition:transform 0.15s}
+    @keyframes pin{from{opacity:0;transform:scale(0.75)}to{opacity:1;transform:scale(1)}}
+    .pw:hover{transform:scale(1.06)}
+    .pw img{width:100%;height:100%;object-fit:cover}
+    .pw .x{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:rgba(26,18,8,0.72);color:#fff;border:none;cursor:pointer;font-size:0.62rem;display:flex;align-items:center;justify-content:center}
+    #icount{font-size:0.78rem;color:var(--muted);font-weight:600;margin-top:9px}
+
+    .f{margin-bottom:16px}
+    .f label{display:block;font-size:0.76rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em}
+    .f input,.f select,.f textarea{width:100%;padding:13px 15px;background:var(--cream);border:1.5px solid var(--border);border-radius:13px;color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;font-size:0.93rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s;resize:vertical}
+    .f input:focus,.f select:focus,.f textarea:focus{border-color:var(--coral);box-shadow:0 0 0 3px rgba(255,92,53,0.09);background:var(--white)}
+    .f input::placeholder,.f textarea::placeholder{color:#c5beb4}
+    .r2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:500px){.r2{grid-template-columns:1fr}}
+    .cc{font-size:0.7rem;color:var(--muted);text-align:right;margin-top:3px}
+
+    #gen-btn{width:100%;padding:17px;border-radius:17px;border:none;background:linear-gradient(135deg,var(--coral),var(--pink));color:#fff;font-family:'Fraunces',serif;font-size:1.12rem;font-weight:700;cursor:pointer;transition:all 0.22s;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 6px 26px rgba(255,92,53,0.38)}
+    #gen-btn:hover{transform:translateY(-2px);box-shadow:0 10px 34px rgba(255,92,53,0.48)}
+    #gen-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+    .sp{width:19px;height:19px;border:2.5px solid rgba(255,255,255,0.3);border-top:2.5px solid #fff;border-radius:50%;animation:spin 0.7s linear infinite;display:none}
+    #gen-btn.ld .sp{display:block}
+    #gen-btn.ld .gl{display:none}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    #res-sec{display:none;animation:sup 0.45s ease}
+    #pub-sec{display:none;animation:sup 0.45s ease}
+    @keyframes sup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+    .desc-ta{min-height:155px;line-height:1.7}
+    .tags-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .tag{padding:7px 13px;border-radius:10px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:5px;animation:pin 0.2s ease;border:1.5px solid transparent}
+    .tag:nth-child(3n+1){background:var(--coral-l);color:#c23a1a;border-color:rgba(255,92,53,0.2)}
+    .tag:nth-child(3n+2){background:var(--teal-l);color:#007a6b;border-color:rgba(0,184,160,0.2)}
+    .tag:nth-child(3n){background:var(--violet-l);color:#5b21b6;border-color:rgba(124,58,237,0.2)}
+    .tag:hover{opacity:0.65;transform:scale(0.96)}
+    .tlen{font-size:0.62rem;opacity:0.55}
+    .tcnt{font-size:0.78rem;font-weight:700;margin-top:9px}
+    .tcnt.ok{color:var(--teal)}.tcnt.w{color:var(--coral)}
+
+    #pub-btn{width:100%;padding:17px;border-radius:17px;border:none;background:linear-gradient(135deg,var(--teal),#00d4bb);color:#fff;font-family:'Fraunces',serif;font-size:1.12rem;font-weight:700;cursor:pointer;transition:all 0.22s;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 6px 26px rgba(0,184,160,0.38)}
+    #pub-btn:hover{transform:translateY(-2px);box-shadow:0 10px 34px rgba(0,184,160,0.48)}
+    #pub-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+    .psp{width:19px;height:19px;border:2.5px solid rgba(255,255,255,0.3);border-top:2.5px solid #fff;border-radius:50%;animation:spin 0.7s linear infinite;display:none}
+    #pub-btn.ld .psp{display:block}
+    #pub-btn.ld .pl{display:none}
+    .pnote{font-size:0.74rem;color:var(--muted);text-align:center;margin-top:9px}
+
+    #sbox{display:none;padding:28px;border-radius:18px;background:linear-gradient(135deg,var(--teal-l),#cefaf4);border:1.5px solid rgba(0,184,160,0.3);text-align:center;animation:pin 0.4s ease}
+    #sbox .se{font-size:2.5rem;margin-bottom:10px}
+    #sbox h3{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;margin-bottom:5px}
+    #sbox p{font-size:0.86rem;color:var(--muted)}
+    #sbox a{color:var(--teal);font-weight:700}
+
+    /* OVERLAY */
+    #overlay{position:fixed;inset:0;z-index:200;background:rgba(26,18,8,0.58);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px}
+    #overlay.on{display:flex}
+    .obox{background:var(--white);border-radius:28px;padding:44px 38px;max-width:440px;width:100%;text-align:center;animation:sup 0.3s ease;border:1.5px solid var(--border)}
+    .oem{font-size:3rem;margin-bottom:14px}
+    .obox h2{font-family:'Fraunces',serif;font-size:1.9rem;font-weight:900;margin-bottom:10px}
+    .obox p{color:var(--muted);font-size:0.88rem;line-height:1.65;margin-bottom:26px}
+    .obtn{display:inline-flex;align-items:center;gap:9px;padding:14px 30px;border-radius:15px;background:var(--coral);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.93rem;text-decoration:none;transition:all 0.2s;box-shadow:0 6px 22px rgba(255,92,53,0.32)}
+    .obtn:hover{background:#e04825;transform:translateY(-1px)}
+    .div{display:flex;align-items:center;gap:11px;margin:18px 0;color:var(--muted);font-size:0.76rem}
+    .div::before,.div::after{content:'';flex:1;height:1px;background:var(--border)}
+    .mt input{width:100%;padding:11px 14px;border-radius:11px;border:1.5px solid var(--border);background:var(--cream);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;outline:none;margin-bottom:7px}
+    .mt input:focus{border-color:var(--coral)}
+    .mt button,.skp{width:100%;padding:11px;border-radius:11px;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:0.86rem;cursor:pointer;transition:all 0.2s}
+    .mt button{background:var(--coral-l);color:var(--coral)}
+    .mt button:hover{background:var(--coral);color:#fff}
+    .skp{background:none;color:var(--muted);margin-top:5px;text-decoration:underline;font-size:0.76rem}
+    .skp:hover{color:var(--ink)}
+
+    #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(16px);padding:13px 22px;border-radius:13px;font-size:0.86rem;font-weight:600;z-index:9999;pointer-events:none;opacity:0;transition:all 0.28s;white-space:nowrap;box-shadow:0 8px 28px rgba(0,0,0,0.14)}
+    #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  </style>
+</head>
+<body>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+
+  <!-- OVERLAY -->
+  <div id="overlay">
+    <div class="obox">
+      <div class="oem">🛍️</div>
+      <h2>Connect Etsy</h2>
+      <p>Authorize Etsy Studio to publish listings on your behalf. Click below to connect your shop.</p>
+      <a href="/api/etsy/auth" class="obtn">🔗 Connect with Etsy</a>
+      <div class="div">or enter token manually</div>
+      <div class="mt">
+        <input type="text" id="mtok" placeholder="Paste your Etsy access token…"/>
+        <button onclick="useTok()">Save token</button>
+      </div>
+      <button class="skp" onclick="closeOv()">Skip — preview only</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <a class="logo" href="/">
+      <div class="logo-mark">✦</div>
+      <div class="logo-text">Etsy <em>Studio</em></div>
+    </a>
+    <div class="hdr-right">
+      <div id="status"><div class="sdot"></div><span id="uname">Connected</span></div>
+      <button id="connect-btn" onclick="showOv()">🔗 Connect Etsy</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="htag">✨ AI-Powered Listing Tool</div>
+      <h1>Publish smarter,<span>sell faster.</span></h1>
+      <p>Upload product photos, write a title — Gemini crafts the perfect description and 13 SEO-optimized tags, then publishes straight to Etsy.</p>
+    </div>
+
+    <div class="pbar">
+      <div class="ps act" id="p1">🖼️ Images</div>
+      <div class="ps" id="p2">✏️ Details</div>
+      <div class="ps" id="p3">✨ Generate</div>
+      <div class="ps" id="p4">🚀 Publish</div>
+    </div>
+
+    <!-- Images -->
+    <div class="sec">
+      <div class="top-bar tb-coral"></div>
+      <div class="sec-hdr">
+        <div class="sec-ico ic-coral">🖼️</div>
+        <div><div class="sec-ttl">Product Images</div><div class="sec-sub">Up to 10 photos · JPG PNG WEBP</div></div>
+      </div>
+      <div id="drop">
+        <input type="file" id="fi" accept="image/*" multiple/>
+        <span class="dico">📸</span>
+        <div class="dtitle">Drop your photos here</div>
+        <div class="dhint">or <strong>click to browse</strong> · Max 10MB each</div>
+      </div>
+      <div id="prevs"></div>
+      <div id="icount"></div>
+    </div>
+
+    <!-- Details -->
+    <div class="sec">
+      <div class="top-bar tb-yellow"></div>
+      <div class="sec-hdr">
+        <div class="sec-ico ic-yellow">✏️</div>
+        <div><div class="sec-ttl">Listing Details</div><div class="sec-sub">Fill in the basics — Gemini handles the rest</div></div>
+      </div>
+      <div class="f">
+        <label>Product Title *</label>
+        <input type="text" id="title" placeholder="e.g. Handmade Ceramic Mug with Wildflower Design" maxlength="140" oninput="cc(this,'tc',140)"/>
+        <div class="cc" id="tc">0/140</div>
+      </div>
+      <div class="r2">
+        <div class="f"><label>Price (USD) *</label><input type="number" id="price" placeholder="29.99" min="0.01" step="0.01"/></div>
+        <div class="f"><label>Quantity</label><input type="number" id="qty" value="1" min="1"/></div>
+      </div>
+      <div class="f">
+        <label>Category</label>
+        <select id="cat">
+          <option>Jewelry</option><option>Clothing</option><option>Home Decor</option><option>Art & Prints</option>
+          <option>Accessories</option><option>Ceramics & Pottery</option><option>Candles & Soaps</option>
+          <option>Stationery</option><option>Toys & Games</option><option>Wedding</option><option>Other</option>
+        </select>
+      </div>
+      <button id="gen-btn" onclick="gen()">
+        <div class="sp"></div><span class="gl">✨ Generate Description & Tags</span>
+      </button>
+    </div>
+
+    <!-- Result -->
+    <div id="res-sec">
+      <div class="sec">
+        <div class="top-bar tb-teal"></div>
+        <div class="sec-hdr">
+          <div class="sec-ico ic-teal">📝</div>
+          <div><div class="sec-ttl">AI Description</div><div class="sec-sub">Fully editable</div></div>
+        </div>
+        <div class="f"><textarea id="desc" class="desc-ta" rows="8"></textarea></div>
+      </div>
+      <div class="sec">
+        <div class="top-bar tb-violet"></div>
+        <div class="sec-hdr">
+          <div class="sec-ico ic-violet">🏷️</div>
+          <div><div class="sec-ttl">SEO Tags</div><div class="sec-sub">Click to remove · Need exactly 13</div></div>
+        </div>
+        <div class="tags-wrap" id="tgrid"></div>
+        <div class="tcnt" id="tcnt"></div>
+      </div>
+    </div>
+
+    <!-- Publish -->
+    <div id="pub-sec">
+      <div class="sec">
+        <div class="top-bar tb-teal"></div>
+        <div class="sec-hdr">
+          <div class="sec-ico ic-teal">🚀</div>
+          <div><div class="sec-ttl">Publish to Etsy</div><div class="sec-sub">Creates a draft in your shop</div></div>
+        </div>
+        <div class="f"><label>Etsy Shop ID</label><input type="text" id="sid" placeholder="Your shop ID (e.g. 12345678)"/></div>
+        <button id="pub-btn" onclick="pub()">
+          <div class="psp"></div><span class="pl">🚀 Publish Draft to Etsy</span>
+        </button>
+        <div class="pnote">Saved as draft — activate it in your Etsy Shop Manager.</div>
+      </div>
+      <div id="sbox">
+        <div class="se">🎉</div>
+        <h3>Listing Published!</h3>
+        <p>Your draft is live. <a id="llink" href="#" target="_blank">View on Etsy ↗</a></p>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast"></div>
+
+  <script>
+    let _files=[], _tags=[], _tok=null;
+
+    // Init
+    (function(){
+      const p=new URLSearchParams(location.search);
+      if(p.get('token')){_tok=p.get('token');localStorage.setItem('et',_tok);history.replaceState({},'','/');connected();me();}
+      else{const t=localStorage.getItem('et');if(t){_tok=t;connected();me();}else setTimeout(showOv,800);}
+    })();
+
+    function connected(){document.getElementById('connect-btn').style.display='none';document.getElementById('status').classList.add('on');}
+    async function me(){
+      try{const r=await fetch('/api/etsy/me',{headers:{Authorization:'Bearer '+_tok}});if(!r.ok)return;const d=await r.json();
+        if(d.login)document.getElementById('uname').textContent=d.login;
+        if(d.shop_id)document.getElementById('sid').value=d.shop_id;
+      }catch(e){}
+    }
+
+    function showOv(){document.getElementById('overlay').classList.add('on');}
+    function closeOv(){document.getElementById('overlay').classList.remove('on');}
+    function useTok(){const t=document.getElementById('mtok').value.trim();if(!t)return;_tok=t;localStorage.setItem('et',t);connected();me();closeOv();toast('Token saved ✓','#00b8a0');}
+
+    // Images
+    const fi=document.getElementById('fi'), drop=document.getElementById('drop');
+    fi.addEventListener('change',e=>add(e.target.files));
+    drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('ov');});
+    drop.addEventListener('dragleave',()=>drop.classList.remove('ov'));
+    drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('ov');add(e.dataTransfer.files);});
+
+    function add(list){
+      const imgs=Array.from(list).filter(f=>f.type.startsWith('image/'));
+      _files=[..._files,...imgs].slice(0,10);render();step(2);
+    }
+    function render(){
+      const c=document.getElementById('prevs');c.innerHTML='';
+      _files.forEach((f,i)=>{
+        const u=URL.createObjectURL(f),w=document.createElement('div');w.className='pw';
+        w.innerHTML=`<img src="${u}"/><button class="x" onclick="rm(${i})">✕</button>`;c.appendChild(w);
+      });
+      document.getElementById('icount').textContent=_files.length?`${_files.length} image${_files.length>1?'s':''} ready`:'';
+    }
+    function rm(i){_files.splice(i,1);render();}
+
+    function step(n){for(let i=1;i<=4;i++){const e=document.getElementById('p'+i);e.className='ps'+(i<n?' dn':i===n?' act':'');}}
+
+    function cc(el,id,max){document.getElementById(id).textContent=el.value.length+'/'+max;}
+
+    async function gen(){
+      const title=document.getElementById('title').value.trim();
+      if(!title){toast('Please enter a product title ✏️','#ff5c35');return;}
+      if(!_files.length){toast('Please upload at least one image 📸','#ff5c35');return;}
+      const btn=document.getElementById('gen-btn');btn.disabled=true;btn.classList.add('ld');
+      try{
+        const form=new FormData();form.append('title',title);form.append('category',document.getElementById('cat').value);
+        _files.slice(0,3).forEach(f=>form.append('images',f));
+        const r=await fetch('/api/generate',{method:'POST',body:form});const d=await r.json();
+        if(!r.ok)throw new Error(d.error||'Generation failed');
+        document.getElementById('desc').value=d.description;
+        renderTags(d.tags);
+        document.getElementById('res-sec').style.display='block';
+        document.getElementById('pub-sec').style.display='block';
+        document.getElementById('res-sec').scrollIntoView({behavior:'smooth',block:'start'});
+        step(4);toast('Content generated! ✨','#00b8a0');
+      }catch(e){toast('❌ '+e.message,'#ff5c35');}
+      btn.disabled=false;btn.classList.remove('ld');
+    }
+
+    function renderTags(tags){
+      _tags=[...tags];const g=document.getElementById('tgrid');g.innerHTML='';
+      _tags.forEach((t,i)=>{
+        const el=document.createElement('div');el.className='tag';
+        el.innerHTML=`${t} <span class="tlen">${t.length}/20</span>`;el.title='Click to remove';
+        el.onclick=()=>{_tags.splice(i,1);renderTags(_tags);};g.appendChild(el);
+      });
+      const c=document.getElementById('tcnt');c.textContent=`${_tags.length}/13 tags`;
+      c.className='tcnt '+(_tags.length===13?'ok':'w');
+    }
+
+    async function pub(){
+      if(!_tok){showOv();return;}
+      const sid=document.getElementById('sid').value.trim();
+      const title=document.getElementById('title').value.trim();
+      const desc=document.getElementById('desc').value.trim();
+      const price=document.getElementById('price').value;
+      const qty=document.getElementById('qty').value||1;
+      if(!sid){toast('Enter your Etsy Shop ID','#ff5c35');return;}
+      if(!price){toast('Enter a price','#ff5c35');return;}
+      if(_tags.length!==13){toast(`Need 13 tags (${_tags.length}/13)`,'#ff5c35');return;}
+      const btn=document.getElementById('pub-btn');btn.disabled=true;btn.classList.add('ld');
+      try{
+        const urls=[];
+        for(const f of _files.slice(0,10)){const fm=new FormData();fm.append('image',f);const r=await fetch('/api/upload-image',{method:'POST',body:fm});const d=await r.json();if(d.url)urls.push(d.url);}
+        const r=await fetch('/api/etsy/listing',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+_tok},body:JSON.stringify({shopId:sid,title,description:desc,tags:_tags,price:parseFloat(price),quantity:parseInt(qty),images:urls})});
+        const d=await r.json();if(!r.ok)throw new Error(JSON.stringify(d.error));
+        document.getElementById('llink').href=d.url;
+        document.getElementById('sbox').style.display='block';
+        document.getElementById('sbox').scrollIntoView({behavior:'smooth'});
+        toast('Published! 🎉','#00b8a0');
+      }catch(e){toast('❌ '+e.message,'#ff5c35');}
+      btn.disabled=false;btn.classList.remove('ld');
+    }
+
+    function toast(msg,bg){
+      const el=document.getElementById('toast');el.textContent=msg;el.style.background=bg||'#333';el.style.color='#fff';
+      el.classList.add('on');setTimeout(()=>el.classList.remove('on'),3200);
+    }
+  </script>
+</body>
+</html>
+
